@@ -15,7 +15,8 @@ cd recipes/upstream/google-cloud/rke2
     -  `prefix` to give the resources an identifiable name (eg, your initials or first name)
     -  `project_id` to specify in which Project the resources will be created
     -  `region` to suit your region
-    -  `instance_count` to specify the number of instances to create
+    -  `server_instance_count` to specify the number of Server instances to create (to maintain ETCD quorum, the value must be 1, 3, or 5)
+    -  `worker_instance_count` to specify the number of Worker instances to create
     -  `ssh_username` to specify the user used to create the VMs (default "ubuntu")
     -  `rancher_hostname` in order to reach the Rancher console via DNS name
     -  `rancher_password` to configure the initial Admin password (the password must be at least 12 characters)
@@ -29,7 +30,7 @@ terraform init -upgrade ; terraform apply -target=module.rke2-first-server.tls_p
 
 - Destroy the resources when finished
 ```bash
-terraform destroy -target=module.rancher_install -auto-approve ; terraform destroy -auto-approve
+terraform state rm module.rancher_install ; terraform destroy -auto-approve
 ```
 
 See full argument list for each module in use:

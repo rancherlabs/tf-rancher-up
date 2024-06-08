@@ -33,7 +33,7 @@ module "rke2-first-server" {
   #  instance_type        = var.instance_type
   #  os_image             = var.os_image
   #  ssh_username         = var.ssh_username
-  startup_script = module.rke2-first.rke2_user_data
+  startup_script = module.rke2-first.rke2_server_user_data
 }
 
 # Create the config.yaml for the RKE2 additional servers
@@ -57,18 +57,39 @@ module "rke2-additional-servers" {
   vpc                  = local.vpc
   subnet               = local.subnet
   create_firewall      = local.create_firewall
-  instance_count       = var.instance_count - 1
+  instance_count       = var.server_instance_count - 1
   #  instance_disk_size   = var.instance_disk_size
   #  disk_type            = var.disk_type
   #  instance_type        = var.instance_type
   #  os_image             = var.os_image
   #  ssh_username         = var.ssh_username
-  startup_script = module.rke2-additional.rke2_user_data
+  startup_script = module.rke2-additional.rke2_server_user_data
+}
+
+# Create the additional VMs and install the RKE2 workers
+module "rke2-additional-workers" {
+  source     = "../../../../modules/infra/google-cloud/compute-engine"
+  prefix     = var.prefix
+  project_id = var.project_id
+  region     = var.region
+  #  create_ssh_key_pair  = var.create_ssh_key_pair
+  ssh_private_key_path = local.private_ssh_key_path
+  ssh_public_key_path  = local.public_ssh_key_path
+  vpc                  = local.vpc
+  subnet               = local.subnet
+  create_firewall      = local.create_firewall
+  instance_count       = var.worker_instance_count
+  #  instance_disk_size   = var.instance_disk_size
+  #  disk_type            = var.disk_type
+  #  instance_type        = var.instance_type
+  #  os_image             = var.os_image
+  #  ssh_username         = var.ssh_username
+  startup_script = module.rke2-additional.rke2_worker_user_data
 }
 
 # Save the private SSH key in the Terraform data source for later use
 data "local_file" "ssh-private-key" {
-  depends_on = [module.rke2-first-server]
+  depends_on = [module.rke2-additional-workers]
   filename   = local.private_ssh_key_path
 }
 
@@ -86,6 +107,7 @@ resource "ssh_resource" "retrieve-kubeconfig" {
   ]
   user        = var.ssh_username
   private_key = data.local_file.ssh-private-key.content
+  retry_delay = "60s"
 }
 
 resource "local_file" "kube-config-yaml" {
@@ -102,7 +124,7 @@ resource "local_file" "kube-config-yaml-backup" {
 
 # Wait for the RKE2 services startup 
 resource "null_resource" "wait-k8s-services-startup" {
-  depends_on = [module.rke2-additional-servers]
+  depends_on = [local_file.kube-config-yaml]
   provisioner "local-exec" {
     command = "sleep ${var.waiting_time}"
   }
@@ -123,7 +145,7 @@ module "rancher_install" {
   bootstrap_rancher          = var.bootstrap_rancher
   rancher_version            = var.rancher_version
   rancher_additional_helm_values = [
-    "replicas: ${var.instance_count}",
+    "replicas: ${var.worker_instance_count}",
     "ingress.ingressClassName: ${var.rancher_ingress_class_name}",
     "service.type: ${var.rancher_service_type}"
   ]

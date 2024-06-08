@@ -32,8 +32,11 @@ region = "<REGION>"
 ## -- Google Firewall used for all resources
 # create_firewall = null
 
-## -- The number of nodes
-# instance_count = 1
+## -- The number of Server nodes
+# server_instance_count = 3
+
+## -- The number of Worker nodes
+# worker_instance_count = 2
 
 ## -- Size of the disk attached to each node, specified in GB
 # instance_disk_size = 50

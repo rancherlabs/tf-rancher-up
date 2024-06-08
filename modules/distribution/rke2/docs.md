@@ -32,5 +32,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_rke2_server_user_data"></a> [rke2\_server\_user\_data](#output\_rke2\_server\_user\_data) | RKE2 server user data |
 | <a name="output_rke2_token"></a> [rke2\_token](#output\_rke2\_token) | Token generated for RKE2 |
-| <a name="output_rke2_user_data"></a> [rke2\_user\_data](#output\_rke2\_user\_data) | RKE2 server user data |
+| <a name="output_rke2_worker_user_data"></a> [rke2\_worker\_user\_data](#output\_rke2\_worker\_user\_data) | RKE2 worker user data |
