@@ -18,14 +18,21 @@ resource "google_compute_subnetwork" "subnet" {
   ip_cidr_range = var.ip_cidr_range
 }
 
+data "google_container_engine_versions" "gke_version" {
+  location       = var.region
+  version_prefix = var.cluster_version_prefix
+}
+
 resource "google_container_cluster" "primary" {
   name     = "${var.prefix}-cluster"
   location = var.region
 
+  deletion_protection = false
+
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  min_master_version = var.cluster_version
+  min_master_version = data.google_container_engine_versions.gke_version.latest_node_version
 
   network    = var.vpc == null ? resource.google_compute_network.vpc[0].name : var.vpc
   subnetwork = var.subnet == null ? resource.google_compute_subnetwork.subnet[0].name : var.subnet
@@ -42,7 +49,7 @@ resource "google_container_node_pool" "primary_nodes" {
   location = var.region
   cluster  = google_container_cluster.primary.name
 
-  version    = var.cluster_version
+  version    = data.google_container_engine_versions.gke_version.latest_node_version
   node_count = var.instance_count
 
   node_config {

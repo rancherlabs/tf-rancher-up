@@ -58,7 +58,7 @@ variable "region" {
 
 # variable "subnet" {}
 
-# variable "cluster_version" {}
+# variable "cluster_version_prefix" {}
 
 # variable "instance_count" {}
 

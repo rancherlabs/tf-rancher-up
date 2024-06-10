@@ -21,7 +21,7 @@ region = "<REGION>"
 # subnet = null
 
 ## -- Supported Google Kubernetes Engine for Rancher Manager
-# cluster_version = "1.28.8-gke.1095000"
+# cluster_version_prefix = "1.28."
 
 #Ref. https://www.suse.com/suse-rancher/support-matrix/all-supported-versions/
 
