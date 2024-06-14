@@ -1,19 +1,13 @@
 variable "aws_access_key" {
-  type        = string
+  default     = null
   description = "AWS access key used to create infrastructure"
-  default     = null
-}
-
-variable "aws_secret_key" {
   type        = string
-  description = "AWS secret key used to create AWS infrastructure"
-  default     = null
 }
 
 variable "aws_region" {
-  type        = string
-  description = "AWS region used for all resources"
   default     = "us-east-1"
+  description = "AWS region used for all resources"
+  type        = string
 
   validation {
     condition = contains([
@@ -49,81 +43,96 @@ variable "aws_region" {
     ], var.aws_region)
     error_message = "Invalid Region specified!"
   }
-}
 
-variable "prefix" {
+
+variable "aws_secret_key" {
+  default     = false
+  description = "AWS secret key used to create AWS infrastructure"
+  sensitive   = true
   type        = string
-  description = "Prefix added to names of all resources"
-  default     = null
 }
 
-variable "server_instance_count" {
-  type        = number
-  description = "Number of server EC2 instances to create"
-  default     = null
+variable "create_security_group" {
+  default     = false
+  description = "Should create the security group associated with the instance(s)"
+  type        = bool
 }
 
-variable "worker_instance_count" {
-  type        = number
-  description = "Number of worker EC2 instances to create"
-  default     = null
-}
-
-variable "instance_type" {
-  type        = string
-  description = "Instance type used for all EC2 instances"
-  default     = null
+variable "create_ssh_key_pair" {
+  default     = false
+  description = "Specify if a new SSH key pair needs to be created for the instances"
+  type        = bool
 }
 
 variable "instance_disk_size" {
-  type        = string
-  description = "Specify root disk size (GB)"
   default     = null
+  description = "Specify root disk size (GB)"
+  type        = string
 }
 
-variable "k3s_version" {
-  type        = string
-  description = "Kubernetes version to use for the k3s cluster"
+variable "instance_security_group" {
   default     = null
+  description = "Provide a pre-existing security group ID"
+  type        = string
+}
+
+variable "instance_type" {
+  default     = null
+  description = "Instance type used for all EC2 instances"
+  type        = string
 }
 
 variable "k3s_channel" {
-  type        = string
+  default     = null
   description = "K3s channel to use, the latest patch version for the provided minor version will be used"
-  default     = null
-}
-
-variable "k3s_token" {
-  description = "Token to use when configuring k3s nodes"
-  default     = null
+  type        = string
 }
 
 variable "k3s_config" {
-  description = "Additional k3s configuration to add to the config.yaml file"
   default     = null
+  description = "Additional k3s configuration to add to the config.yaml file"
+  type        = string
 }
 
-variable "kube_config_path" {
-  description = "The path to write the kubeconfig for the RKE cluster"
-  type        = string
+variable "k3s_token" {
   default     = null
+  description = "Token to use when configuring k3s nodes"
+  type        = string
+}
+
+variable "k3s_version" {
+  default     = null
+  description = "Kubernetes version to use for the k3s cluster"
+  type        = string
 }
 
 variable "kube_config_filename" {
+  default     = null
   description = "Filename to write the kube config"
   type        = string
+}
+
+variable "kube_config_path" {
   default     = null
+  description = "The path to write the kubeconfig for the RKE cluster"
+  type        = string
+}
+
+variable "prefix" {
+  default     = null
+  description = "Prefix added to names of all resources"
+  type        = string
 }
 
 variable "rancher_bootstrap_password" {
-  description = "Password to use for bootstrapping Rancher (min 12 characters)"
   default     = "initial-admin-password"
+  description = "Password to use for bootstrapping Rancher (min 12 characters)"
   type        = string
 }
 
 variable "rancher_password" {
-  description = "Password to use for Rancher (min 12 characters)"
   default     = null
+  description = "Password to use for Rancher (min 12 characters)"
   type        = string
 
   validation {
@@ -132,68 +141,63 @@ variable "rancher_password" {
   }
 }
 
-variable "rancher_version" {
-  description = "Rancher version to install"
-  default     = null
-  type        = string
-}
-
 variable "rancher_replicas" {
-  description = "Value for replicas when installing the Rancher helm chart"
   default     = 3
+  description = "Value for replicas when installing the Rancher helm chart"
   type        = number
 }
 
-variable "create_ssh_key_pair" {
-  type        = bool
-  description = "Specify if a new SSH key pair needs to be created for the instances"
+variable "rancher_version" {
   default     = null
+  description = "Rancher version to install"
+  type        = string
+}
+
+variable "server_instance_count" {
+  default     = null
+  description = "Number of server EC2 instances to create"
+  type        = number
 }
 
 variable "ssh_key_pair_name" {
-  type        = string
-  description = "Specify the SSH key name to use (that's already present in AWS)"
   default     = null
+  description = "Specify the SSH key name to use (that's already present in AWS)"
+  type        = string
 }
 
 variable "ssh_key_pair_path" {
-  type        = string
-  description = "Path to the SSH private key used as the key pair (that's already present in AWS)"
   default     = null
+  description = "Path to the SSH private key used as the key pair (that's already present in AWS)"
+  type        = string
 }
 
 variable "ssh_username" {
-  type        = string
-  description = "Username used for SSH with sudo access"
   default     = "ubuntu"
+  description = "Username used for SSH with sudo access"
+  type        = string
 }
 
 variable "spot_instances" {
-  type        = bool
+  default     = false
   description = "Use spot instances"
-  default     = null
+  type        = bool
 }
 
 variable "subnet_id" {
-  type        = string
+  default     = null
   description = "VPC Subnet ID to create the instance(s) in"
-  default     = null
-}
-
-variable "create_security_group" {
-  type        = bool
-  description = "Should create the security group associated with the instance(s)"
-  default     = null
-}
-
-# TODO: Add a check based on above value
-variable "instance_security_group" {
   type        = string
-  description = "Provide a pre-existing security group ID"
-  default     = null
 }
 
 variable "wait" {
-  description = "An optional wait before installing the Rancher helm chart"
   default     = "20s"
+  description = "An optional wait before installing the Rancher helm chart"
+  type        = string
 }
+
+variable "worker_instance_count" {
+  default     = null
+  description = "Number of worker EC2 instances to create"
+  type        = number
+}
+

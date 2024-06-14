@@ -1,17 +1,19 @@
 variable "cluster_name" {
-  description = "The cluster name"
   default     = "rke-ds"
+  description = "The cluster name"
+  type        = string
 }
 
 variable "rancher_token" {
-  description = "Rancher API token"
   default     = null
+  description = "Rancher API token"
   type        = string
 }
 
 variable "rancher_insecure" {
-  description = "Allow insecure connections to Rancher"
   default     = true
+  description = "Allow insecure connections to Rancher"
+  type        = bool
 }
 
 variable "rancher_url" {
@@ -21,21 +23,22 @@ variable "rancher_url" {
 }
 
 variable "aws_access_key" {
-  type        = string
-  description = "AWS access key used to create infrastructure"
   default     = null
+  description = "AWS access key used to create infrastructure"
+  type        = string
 }
 
 variable "aws_secret_key" {
-  type        = string
-  description = "AWS secret key used to create AWS infrastructure"
   default     = null
+  description = "AWS secret key used to create AWS infrastructure"
+  type        = string
+  sensitive   = true
 }
 
 variable "aws_region" {
-  type        = string
-  description = "AWS region used for all resources"
   default     = "us-east-1"
+  description = "AWS region used for all resources"
+  type        = string
 
   validation {
     condition = contains([
@@ -74,94 +77,99 @@ variable "aws_region" {
 }
 
 variable "zone" {
+  default     = "a"
   description = "AWS zone to use for all resources"
   type        = string
-  default     = "a"
 }
 
 variable "cloud_credential_id" {
-  description = "Rancher cloud credential to use, instead of AWS access/secret key (ex: cattle-global-data:cc-xxx)"
   default     = null
+  description = "Rancher cloud credential to use, instead of AWS access/secret key (ex: cattle-global-data:cc-xxx)"
   type        = string
 }
 
 variable "subnet_id" {
-  description = "Subnet ID for all resources"
   default     = null
+  description = "Subnet ID for all resources"
   type        = string
 }
 
 variable "cp_count" {
-  description = "Control plane pool node count"
   default     = 1
+  description = "Control plane pool node count"
   type        = number
 }
 
 variable "worker_count" {
-  description = "Worker pool node count"
   default     = 1
+  description = "Worker pool node count"
   type        = number
 }
 
 variable "kubernetes_version" {
-  type        = string
-  description = "Kubernetes version to use for the RKE2/k3s cluster"
   default     = null
+  description = "Kubernetes version to use for the RKE2/k3s cluster"
+  type        = string
 }
 
 variable "cp_node_pool_name" {
-  description = "Control plane pool name"
   default     = "cp"
+  description = "Control plane pool name"
+  type        = string
 }
 
 variable "worker_node_pool_name" {
-  description = "Worker pool name"
   default     = "w"
+  description = "Worker pool name"
+  type        = string
 }
 
 variable "instance_type" {
-  type        = string
-  description = "Instance type used for all EC2 instances"
   default     = "t3a.medium"
+  description = "Instance type used for all EC2 instances"
+  type        = string
 }
 
 variable "volume_size" {
-  description = "Specify root volume size (GB)"
   default     = 20
+  description = "Specify root volume size (GB)"
   type        = number
 }
 
 variable "cni_provider" {
-  description = "CNI provider to use"
   default     = "calico"
+  description = "CNI provider to use"
+  type        = string
 }
 
 variable "vpc_id" {
-  description = "AWS VPC to use, subnet ID and security group must exist in the VPC"
   default     = null
+  description = "AWS VPC to use, subnet ID and security group must exist in the VPC"
   type        = string
 }
 
 variable "security_group_name" {
-  description = "Security Group name for nodes"
   default     = null
+  description = "Security Group name for nodes"
+  type        = string
 }
 
 variable "ssh_user" {
-  type        = string
-  description = "Username used for SSH with sudo access"
   default     = "ubuntu"
+  description = "Username used for SSH with sudo access"
+  type        = string
 }
 
 variable "spot_instances" {
-  type        = bool
+  default     = false
   description = "Use spot instances"
-  default     = null
+  type        = bool
 }
 
 variable "ami" {
   default     = null
   description = "AMI to use when launching nodes"
+  type        = string
 
   validation {
     condition     = can(regex("^ami-[[:alnum:]]{10}", var.ami))

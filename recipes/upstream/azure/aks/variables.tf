@@ -1,38 +1,39 @@
 variable "azure_subscription_id" {
-  type        = string
-  description = "Azure subscription id"
   default     = null
+  description = "Azure subscription id"
+  type        = string
 }
 
 variable "azure_subscription_tenant_id" {
-  type        = string
-  description = "Azure subscription tenant id"
   default     = null
+  description = "Azure subscription tenant id"
+  type        = string
 }
 
 variable "azure_service_principal_appid" {
-  type        = string
-  description = "Azure service principal app id"
   default     = null
+  description = "Azure service principal app id"
+  type        = string
 }
 
 variable "azure_service_principal_password" {
-  type        = string
-  description = "Azure service principal password"
   default     = null
+  description = "Azure service principal password"
   sensitive   = true
+  type        = string
 }
 
 variable "prefix" {
-  type        = string
-  description = "Prefix added to names of all resources"
   default     = "rancher-terraform"
+  description = "Prefix added to names of all resources"
+  type        = string
 }
 
 variable "azure_region" {
-  type        = string
-  description = "Azure region used for all resources"
   default     = "westus3"
+  description = "Azure region used for all resources"
+  type        = string
+
   validation {
     condition = contains([
       "australiacentral",
@@ -89,17 +90,18 @@ variable "azure_region" {
 }
 
 variable "node_count" {
-  type        = number
-  description = "Number of nodes to create in the default node pool"
   default     = 3
+  description = "Number of nodes to create in the default node pool"
   nullable    = false
+  type        = number
 }
 
 variable "vm_size" {
-  type        = string
-  description = "VM Size for the default node pool"
   default     = "Standard_DS2_v2"
+  description = "VM Size for the default node pool"
   nullable    = false
+  type        = string
+
   validation {
     condition = contains([
       "Basic_A4",
@@ -217,20 +219,20 @@ variable "vm_size" {
 }
 
 variable "rancher_replicas" {
-  description = "Value for replicas when installing the Rancher helm chart"
   default     = 3
+  description = "Value for replicas when installing the Rancher helm chart"
   type        = number
 }
 
 variable "rancher_version" {
-  description = "Rancher version to install"
   default     = null
+  description = "Rancher version to install"
   type        = string
 }
 
 variable "rancher_bootstrap_password" {
-  description = "Password to use for bootstrapping Rancher (min 12 characters)"
   default     = "initial-admin-password"
+  description = "Password to use for bootstrapping Rancher (min 12 characters)"
   type        = string
 
   validation {
@@ -240,12 +242,13 @@ variable "rancher_bootstrap_password" {
 }
 
 variable "wait" {
-  description = "An optional wait before installing the Rancher helm chart (seconds)"
   default     = null
+  description = "An optional wait before installing the Rancher helm chart (seconds)"
+  type        = string
 }
 
 variable "kube_config_filename" {
+  default     = null
   description = "Filename to write the kue config"
   type        = string
-  default     = null
 }

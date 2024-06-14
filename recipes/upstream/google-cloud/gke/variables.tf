@@ -1,10 +1,18 @@
-variable "prefix" {}
+variable "prefix" {
+  default     = "rancher-terraform"
+  description = "Prefix added to names of all resources"
+  type        = string
+}
 
-variable "project_id" {}
+variable "project_id" {
+  default     = null
+  description = "Google Cloud project ID"
+  type        = string
+}
 
 variable "region" {
-  description = "Google Region to create the resources"
   default     = "us-west2"
+  description = "Google Region to create the resources"
 
   validation {
     condition = contains([
@@ -71,15 +79,21 @@ variable "region" {
 # variable "instance_type" {}
 
 variable "bootstrap_rancher" {
+  default     = true
   description = "Bootstrap the Rancher installation"
   type        = bool
-  default     = true
 }
 
-variable "rancher_hostname" {}
+variable "rancher_hostname" {
+  default     = null
+  description = "Hostname for Rancher server"
+  type        = string
+}
 
 variable "rancher_password" {
-  type = string
+  default     = null
+  description = "Password for accessing Rancher server (minimum 12 characters)"
+  type        = string
 
   validation {
     condition     = length(var.rancher_password) >= 12
@@ -88,7 +102,7 @@ variable "rancher_password" {
 }
 
 variable "rancher_version" {
+  default     = null
   description = "Rancher version to install"
   type        = string
-  default     = null
 }
