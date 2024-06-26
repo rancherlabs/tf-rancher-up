@@ -41,17 +41,26 @@ aws_region = "<REGION>"
 
 #Ref. https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html
 
-## -- The number of nodes
-instance_count = 3
+## -- The number of Master nodes
+master_nodes_count = 1
 
-## -- The name of a AWS EC2 machine type
-# instance_type = "t3.medium"
+## -- The number of Worker nodes
+worker_nodes_count = 1
+
+## -- Master nodes type
+# master_nodes_type = "t3.medium"
+
+## -- Worker nodes type
+# worker_nodes_type = "t3.medium"
 
 ## -- Use spot instances
 # spot_instances = false
 
-## -- Size of the disk attached to each node, specified in GB
-# instance_disk_size = 80
+## -- Master nodes disk size (GB)
+# master_nodes_disk_size = 80
+
+## -- Worker nodes disk size (GB)
+# worker_nodes_disk_size = 80
 
 ## -- If the Security Group was created manually, it can be entered here
 # instance_security_group_id = null
@@ -65,8 +74,11 @@ ssh_username = "ubuntu"
 ## -- Bastion host configuration to access the instances
 # bastion_host = null
 
-## -- IAM Instance Profile to assign to the instances/nodes
-# iam_instance_profile = null
+## -- IAM Instance Profile to assign to the Master nodes
+# master_nodes_iam_instance_profile = null
+
+## -- IAM Instance Profile to assign to the Worker nodes
+# worker_nodes_iam_instance_profile = null
 
 ## -- User-provided tags for the resources
 # tags = {}

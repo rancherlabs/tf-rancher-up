@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available" {}
+
 # TODO: Make the Ubuntu OS version configurable
 # TODO: Add support for ARM architecture
 data "aws_ami" "ubuntu" {
@@ -13,4 +15,10 @@ data "aws_ami" "ubuntu" {
     name   = "virtualization-type"
     values = ["hvm"]
   }
+}
+
+# Save the private SSH key in the Terraform data source for later use
+data "local_file" "ssh-private-key" {
+  depends_on = [local_file.private_key_pem]
+  filename   = local.private_ssh_key_path
 }

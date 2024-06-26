@@ -1,199 +1,130 @@
-variable "aws_access_key" {
-  type        = string
-  description = "Enter your AWS access key"
-}
-
-variable "aws_secret_key" {
-  type        = string
-  description = "Enter your AWS secret key"
-  sensitive   = true
-}
+variable "prefix" {}
 
 variable "aws_region" {
   type        = string
   description = "AWS region used for all resources"
+  default     = "us-east-1"
+
+  validation {
+    condition = contains([
+      "us-east-2",
+      "us-east-1",
+      "us-west-1",
+      "us-west-2",
+      "af-south-1",
+      "ap-east-1",
+      "ap-south-2",
+      "ap-southeast-3",
+      "ap-southeast-4",
+      "ap-south-1",
+      "ap-northeast-3",
+      "ap-northeast-2",
+      "ap-southeast-1",
+      "ap-southeast-2",
+      "ap-northeast-1",
+      "ca-central-1",
+      "ca-west-1",
+      "eu-central-1",
+      "eu-west-1",
+      "eu-west-2",
+      "eu-south-1",
+      "eu-west-3",
+      "eu-south-2",
+      "eu-north-1",
+      "eu-central-2",
+      "il-central-1",
+      "me-south-1",
+      "me-central-1",
+      "sa-east-1",
+    ], var.aws_region)
+    error_message = "Invalid Region specified!"
+  }
 }
 
-variable "vpc_zone" {
-  type        = string
-  description = "VPC zone"
-  default     = null
+variable "create_ssh_key_pair" {
+  default = null
 }
 
-variable "subnet_id" {
-  type        = string
-  description = "VPC Subnet ID to create the instance(s) in"
-  default     = null
+variable "ssh_key_pair_name" {
+  default = null
+}
+
+variable "ssh_private_key_path" {
+  default = null
+}
+
+variable "ssh_public_key_path" {
+  default = null
 }
 
 variable "vpc_id" {
-  type        = string
-  description = "VPC ID to create the instance(s) in"
-  default     = null
+  default = null
+}
+
+variable "subnet_id" {
+  default = null
 }
 
 variable "create_security_group" {
-  type        = bool
-  description = "Should create the security group associated with the instance(s)"
-  default     = true
+  default = null
 }
 
-# TODO: Add a check based on above value
-variable "instance_security_group" {
-  type        = string
-  description = "Provide a pre-existing security group ID"
-  default     = null
+variable "master_nodes_count" {}
+
+variable "worker_nodes_count" {}
+
+variable "instance_security_group_id" {
+  default = null
 }
 
-variable "instance_security_group_name" {
-  type        = string
-  description = "Provide a pre-existing security group name"
-  default     = null
-}
+variable "ssh_username" {}
 
-variable "prefix" {
-  type        = string
-  description = "Prefix added to names of all resources"
-}
-
-variable "master_nodes_count" {
-  type        = number
-  description = "Number of master nodes to create"
-  default     = 1
-}
-
-variable "worker_nodes_count" {
-  type        = number
-  description = "Number of worker nodes to create"
-  default     = 1
-}
-
-variable "kube_config_path" {
-  description = "The path to write the kubeconfig for the RKE cluster"
-  type        = string
-  default     = null
-}
-
-variable "kube_config_filename" {
-  description = "Filename to write the kube config"
-  type        = string
-  default     = null
-}
-
-variable "kubernetes_version" {
-  type        = string
-  description = "Kubernetes version to use for the RKE cluster"
+variable "user_data" {
+  description = "User data content for EC2 instance(s)"
   default     = null
 }
 
 variable "install_docker" {
   type        = bool
-  description = "Should install docker while creating the instance"
+  description = "Install Docker while creating the instances"
   default     = true
 }
 
 variable "docker_version" {
   type        = string
   description = "Docker version to install on nodes"
-  default     = "23.0.6"
+  default     = "20.10"
 }
 
-variable "create_ssh_key_pair" {
+variable "waiting_time" {
+  description = "Waiting time (in seconds)"
+  default     = 180
+}
+
+variable "ingress_provider" {
+  description = "Ingress controller provider"
+  default     = "nginx"
+}
+
+variable "bootstrap_rancher" {
+  description = "Bootstrap the Rancher installation"
   type        = bool
-  description = "Specify if a new SSH key pair needs to be created for the instances"
-  default     = false
-}
-
-variable "ssh_key_pair_name" {
-  type        = string
-  description = "Specify the SSH key name to use (that's already present in AWS)"
-  default     = null
-}
-
-variable "ssh_key_pair_path" {
-  type        = string
-  description = "Path to the SSH private key used as the key pair (that's already present in AWS)"
-  default     = null
-}
-
-variable "ssh_key" {
-  type        = string
-  description = "Contents of the private key to connect to the instances."
-  default     = null
-  sensitive   = true
-}
-
-variable "bastion_host" {
-  type = object({
-    address      = string
-    user         = string
-    ssh_key_path = string
-    ssh_key      = string
-  })
-  default     = null
-  description = "Bastion host configuration to access the RKE nodes"
-}
-
-variable "ssh_username" {
-  type        = string
-  description = "Username used for SSH with sudo access"
-  default     = "ubuntu"
-}
-
-variable "master_nodes_instance_type" {
-  type        = string
-  description = "Instance type used for all master nodes"
-  default     = "t3.medium"
-}
-
-variable "master_nodes_instance_disk_size" {
-  type        = string
-  description = "Disk size used for all master nodes (in GB)"
-  default     = "80"
-}
-
-variable "worker_nodes_instance_type" {
-  type        = string
-  description = "Instance type used for all worker nodes"
-  default     = "t3.large"
-}
-
-variable "worker_nodes_instance_disk_size" {
-  type        = string
-  description = "Disk size used for all worker nodes (in GB)"
-  default     = "80"
-}
-
-variable "dependency" {
-  description = "An optional variable to add a dependency from another resource (not used)"
-  default     = null
-}
-
-variable "master_nodes_iam_instance_profile" {
-  description = "Specify IAM instance profile to attach to master nodes"
-  default     = null
-  type        = string
-}
-
-variable "worker_nodes_iam_instance_profile" {
-  description = "Specify IAM instance profile to attach to worker nodes"
-  default     = null
-  type        = string
-}
-
-variable "tags" {
-  description = "User-provided tags for the resources"
-  type        = map(string)
-  default     = {}
-}
-
-variable "cloud_provider" {
-  description = "Specify the cloud provider name"
-  type        = string
-  default     = null
-}
-
-variable "create_kubeconfig_file" {
-  description = "Boolean flag to generate a kubeconfig file (mostly used for dev only)"
   default     = true
+}
+
+variable "rancher_hostname" {}
+
+variable "rancher_password" {
+  type = string
+
+  validation {
+    condition     = length(var.rancher_password) >= 12
+    error_message = "The password must be at least 12 characters."
+  }
+}
+
+variable "rancher_version" {
+  description = "Rancher version to install"
+  type        = string
+  default     = null
 }

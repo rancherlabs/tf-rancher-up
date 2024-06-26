@@ -1,12 +1,4 @@
-# Setup local variables
 locals {
-  vpc                  = var.vpc == null ? "${var.prefix}-vpc" : var.vpc
-  subnet               = var.subnet == null ? "${var.prefix}-subnet" : var.subnet
-  create_firewall      = var.create_firewall == null ? false : true
-  private_ssh_key_path = fileexists("${path.cwd}/${var.prefix}-ssh_private_key.pem") ? "${path.cwd}/${var.prefix}-ssh_private_key.pem" : var.ssh_private_key_path
-  public_ssh_key_path  = fileexists("${path.cwd}/${var.prefix}-ssh_public_key.pem") ? "${path.cwd}/${var.prefix}-ssh_public_key.pem" : var.ssh_public_key_path
-}
-
   kc_path        = var.kube_config_path != null ? var.kube_config_path : path.cwd
   kc_file        = var.kube_config_filename != null ? "${local.kc_path}/${var.kube_config_filename}" : "${local.kc_path}/${var.prefix}_kube_config.yml"
   kc_file_backup = "${local.kc_file}.backup"

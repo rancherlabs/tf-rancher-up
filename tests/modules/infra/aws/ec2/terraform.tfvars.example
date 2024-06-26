@@ -1,0 +1,20 @@
+###### !! Required variables !! ######
+
+## -- The prefix used in front of all AWS resources
+prefix = "<RESOURCES_PREFIX>"
+
+# -- The necessary variables for login via CLI to the AWS console. If you will use these variables, also uncomment them in the provider.tf file. If you don't configure anything, the ~/.aws/credentials file will be looked for
+# aws_access_key    = <ACCESS_KEY>
+# aws_secret_key    = <SECRET_KEY>
+# aws_session_token = <SESSION_TOKEN>
+
+## -- AWS Region to create the resources
+aws_region = "<REGION>"
+
+#Ref. https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html
+
+## -- The number of nodes
+instance_count = 1
+
+## -- Username used to allow access to VMs via SSH key exchange
+ssh_username = "ubuntu"

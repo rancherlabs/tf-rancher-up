@@ -1,49 +1,79 @@
-# Terraform | AWS Infrastructure
+# Terraform | AWS - Preparatory steps
 
-Terraform module to provide AWS nodes prepared for creating a kubernetes cluster.
+In order for Terraform to run operations on your behalf, you must [install and configure the AWS CLI tool](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions).
 
-Basic infrastructure options are provided to be coupled with other modules for example environments.
+## Example
 
-Documentation can be found [here](./docs.md).
+#### macOS installation and setup for all users
 
-## Examples
-
-#### Launch a single instance, create a keypair
-
-```terraform
-module "upstream_cluster" {
-  source              = "git::https://github.com/rancherlabs/tf-rancher-up.git//modules/infra/aws"
-  aws_region          = "us-east-1"
-  prefix              = "example-rancher"
-  instance_count      = 1
-  create_ssh_key_pair = true
-  user_data           = |
-    echo "hello world"
-}
+```console
+curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
 ```
 
-#### Provide an existing SSH key and Security Group
-
-```terraform
-module "upstream_cluster" {
-  source                  = "git::https://github.com/rancherlabs/tf-rancher-up.git//modules/infra/aws"
-  aws_region              = "us-east-1"
-  prefix                  = "example-rancher"
-  instance_count          = 1
-  ssh_key_pair_name       = "rancher-ssh"
-  instance_security_group = "sg-xxxxx"
-}
+```console
+sudo installer -pkg AWSCLIV2.pkg -target /
 ```
 
-#### Provide an existing VPC and Subnet
+#### Verify installation
 
-```terraform
-module "upstream_cluster" {
-  source                  = "git::https://github.com/rancherlabs/tf-rancher-up.git//modules/infra/aws"
-  aws_region              = "us-east-1"
-  prefix                  = "example-rancher"
-  instance_count          = 1
-  vpc_id                  = "vpc-xxxxx"
-	subnet_id               = "subnet-xxxxxx"
-}
+```console
+$ which aws
+/usr/local/bin/aws
+```
+
+```console
+$ aws --version
+aws-cli/2.13.33 Python/3.11.6 Darwin/23.1.0 exe/x86_64 prompt/off
+```
+
+#### Setup credentials and configuration
+
+##### Option 1 - AWS CLI
+
+```console
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_DEFAULT_REGION=
+export AWS_DEFAULT_OUTPUT=text
+```
+
+##### Option 2 - Manually creating credential files
+
+```console
+mkdir ~/.aws
+```
+
+```console
+cd ~/.aws
+```
+
+```console
+cat > credentials << EOL
+[default]
+aws_access_key_id = <YOUR_ACCESS_KEY>
+aws_secret_access_key = <YOUR_SECRET_ACCESS_KEY>
+EOL
+```
+
+```console
+cat > config << EOL
+[default]
+region = <REGION>
+output = text
+EOL
+```
+
+##### Option 3 - IAM Identity Center credentials
+
+```console
+aws configure sso
+```
+
+```console
+export AWS_PROFILE=<YOUR_CONFIG_PROFILE>
+```
+
+##### Verify credentials
+```console
+aws sts get-caller-identity
 ```
